@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.RandomAccessFile;
 import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
 
@@ -125,10 +126,12 @@ public class Monitor {
 //		else
 		boolean isChi = false;	
 		int skipCount=0;
+		RandomAccessFile pipe  = null;
 		try {
-			in = new BufferedReader(new FileReader(new File(args[0])));
+			pipe = new RandomAccessFile(args[0], "r");
+//			in = new BufferedReader(new FileReader(new File(args[0])));
 			String line;
-			while ((line = in.readLine()) != null) {
+			while ((line = pipe.readLine()) != null) {
 				currEvent = Integer.MAX_VALUE;
 				if(line.contains("buffer"))
 				{
@@ -180,8 +183,8 @@ public class Monitor {
 			throw e;
 		}
 		finally {
-			if (in != null) {
-				in.close();
+			if (pipe != null) {
+				pipe.close();
 			}
 		}
 	}
