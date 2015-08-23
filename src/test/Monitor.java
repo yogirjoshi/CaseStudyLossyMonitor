@@ -178,7 +178,7 @@ public class Monitor {
 		// TODO Auto-generated method stub
 		Monitor m = new Monitor();
 //		System.out.println(args[1]);
-		int buffSize = Integer.parseInt(args[1]);
+		int buffSize = Integer.parseInt(args[0]);
 //		if(mype.equals("BTRV"))
 //		else
 		boolean isChi = false;	
@@ -234,6 +234,7 @@ public class Monitor {
 			{
 				m.runMon();
 				m.events.clear();
+				System.out.println(m.getOutputForState());
 			}
 			System.out.println("Final Verdict:" + m.getOutputForState());
 			System.out.println("Avg monitor running time:" + m.avgMontime);
