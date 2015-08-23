@@ -209,6 +209,8 @@ public class Monitor {
 					isChi = false;
 				}
 				short currEvent = parseEvent(playing, buffering, decoding, uknown);
+				if(!uknown)
+					m.events.add(currEvent);
 				if(uknown && !isChi){
 					m.events.add(currEvent);
 					isChi = true;
@@ -234,7 +236,6 @@ public class Monitor {
 			{
 				m.runMon();
 				m.events.clear();
-				System.out.println(m.getOutputForState());
 			}
 			System.out.println("Final Verdict:" + m.getOutputForState());
 			System.out.println("Avg monitor running time:" + m.avgMontime);
