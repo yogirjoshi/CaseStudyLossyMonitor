@@ -6,24 +6,31 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
+import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
-
-
 public class Monitor {
 	int evtCounter = 0;
 	int currState;
-	ArrayList<Integer> events;
+	ArrayList<Short> events;
 	long avgMontime;
 	public Monitor()
 	{
-		events = new ArrayList<Integer>();
-		currState = 1;
+		events = new ArrayList<Short>();
+		currState = 0;
 		avgMontime = 0;
 	}
-	public enum Statetype {
-		A, B, AANDB, EMPTY, CHI;
-	}
+
+	final static short B = 0; 
+	final static short D = 1;
+	final static short P = 2;
+	final static short B_AND_D = 3;
+	final static short B_AND_P = 4;
+	final static short D_AND_P = 5;
+	final static short B_AND_D_AND_P = 6;
+	final static short EMPTY = 7;
+	final static short CHI = 8;
+
 	public void runMon()
 	{
 		long startTime = System.currentTimeMillis();
@@ -44,62 +51,94 @@ public class Monitor {
 	{
 		String currOutput = "";
 		switch (currState) {
-		case 1:
-			currOutput = "FP";
+		case 0:
+			currOutput = "TP";
 			break;
+		case 1:
+			currOutput = "TP";
+			break;
+			
 		case 2:
 			currOutput = "FP";
 			break;
 			
 		case 3:
-			currOutput = "TP";
-			break;
-		case 4:
 			currOutput = "?";
 			break;	
+			
+		case 4:
+			currOutput = "?";
+			break;		
 		default:
 
 			break;
 		}
 		return currOutput;
 	}
-	int performTransition(int predicateSTate)
+	short performTransition(int predicateSTate)
 	{
 		switch (currState) {
-		case 1: 
-			if(predicateSTate == Statetype.A.ordinal() || predicateSTate == Statetype.EMPTY.ordinal())
-				return 2;
-			if(predicateSTate == Statetype.B.ordinal() || predicateSTate == Statetype.AANDB.ordinal())
+			case 0:
+				if(predicateSTate == EMPTY || 
+				predicateSTate == B || 
+				predicateSTate == B_AND_D || 
+				predicateSTate == D)
+					return 0;
+				if(predicateSTate == D_AND_P ||
+						predicateSTate == B_AND_D_AND_P ||
+						predicateSTate == P)
+					return 1;
+				if(predicateSTate == B_AND_P)
+					return 2;
+				if(predicateSTate == CHI)
+					return 3;
+			case 1:  
+				
+				if(predicateSTate == B_AND_D ||
+				predicateSTate == B_AND_D_AND_P ||
+				predicateSTate == D_AND_P ||
+				predicateSTate == P||
+				predicateSTate == EMPTY ||
+				predicateSTate == D)
+					return 1;
+				if(predicateSTate == B_AND_P |
+					predicateSTate == B)
+					return 2;
+				if(predicateSTate == CHI)
+					return 4;
+			case 2:
+				if(predicateSTate == D||
+				predicateSTate == B_AND_D_AND_P ||
+				predicateSTate == D_AND_P ||
+				predicateSTate == B_AND_D)
+					return 1;
+				if(predicateSTate == EMPTY ||
+						predicateSTate == P ||
+						predicateSTate == B_AND_P ||
+						predicateSTate == B )
+					return 2;
+				if(predicateSTate == CHI)
+					return 4;
+			case 3:
+				if(	predicateSTate == D_AND_P ||
+				predicateSTate == B_AND_D_AND_P)
+					return 1;
+				if(predicateSTate == B_AND_P )
+					return 2;
 				return 3;
-			if(predicateSTate == Statetype.CHI.ordinal())
+
+			case 4:
+				if(	predicateSTate == B_AND_D||
+				predicateSTate == D_AND_P ||
+				predicateSTate == D ||
+				predicateSTate ==B_AND_D_AND_P)
+					return 1;
+				if(predicateSTate == B_AND_P ||
+						predicateSTate == B)
+					return 2;
 				return 4;
-			break;
-		case 2:
-			if(predicateSTate == Statetype.A.ordinal() || predicateSTate == Statetype.EMPTY.ordinal())
-				return 2;
-			if(predicateSTate == Statetype.B.ordinal() || predicateSTate == Statetype.AANDB.ordinal())
-				return 3;
-			if(predicateSTate == Statetype.CHI.ordinal())
-				return 4;
-			break;
-		case 3:
-			if(predicateSTate == Statetype.A.ordinal() || predicateSTate == Statetype.EMPTY.ordinal())
-				return 2;
-			if(predicateSTate == Statetype.B.ordinal() || predicateSTate == Statetype.AANDB.ordinal())
-				return 3;
-			if(predicateSTate == Statetype.CHI.ordinal())
-				return 4;
-			break;
-		case 4:
-			if(predicateSTate == Statetype.A.ordinal() || predicateSTate == Statetype.EMPTY.ordinal())
-				return 2;
-			if(predicateSTate == Statetype.B.ordinal() || predicateSTate == Statetype.AANDB.ordinal())
-				return 3;
-			if(predicateSTate == Statetype.CHI.ordinal())
-				return 4;
-			break;	
-		default:
-			break;
+			default:
+				break;
 		}
 		return 0;
 	}
@@ -115,10 +154,28 @@ public class Monitor {
 			
 		}
 	}
+	public static short parseEvent(boolean playing, boolean buffering, boolean decoding, boolean uknown){
+		if(playing && buffering && decoding)
+			return B_AND_D_AND_P;
+		if(playing && buffering)
+			return B_AND_P;
+		if(playing && decoding)
+			return D_AND_P;
+		if(buffering && decoding)
+			return B_AND_D;
+		if(buffering)
+			return B;
+		if(decoding)
+			return D;
+		if(playing)
+			return P;
+		if(uknown)
+			return CHI;
+		return EMPTY;
+		
+	}
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		BufferedReader in = null;
-		int currEvent = Integer.MAX_VALUE;
 		Monitor m = new Monitor();
 //		System.out.println(args[1]);
 		int buffSize = Integer.parseInt(args[1]);
@@ -129,41 +186,44 @@ public class Monitor {
 		RandomAccessFile pipe  = null;
 		try {
 			pipe = new RandomAccessFile(args[0], "r");
-//			in = new BufferedReader(new FileReader(new File(args[0])));
 			String line;
+
 			while ((line = pipe.readLine()) != null) {
-				currEvent = Integer.MAX_VALUE;
+				boolean playing = false, buffering = false, decoding = false, uknown = false;
+				if(line.contains("play")){
+					playing = true;
+				}
 				if(line.contains("buffer"))
 				{
-					isChi=false;
-					currEvent = Statetype.A.ordinal();
-					m.events.add(currEvent);
-					
+					buffering = true;
 				}
 				if(line.contains("decode"))
 				{
-					currEvent = Statetype.B.ordinal();
-					isChi=false;
-					m.events.add(currEvent);
+					decoding = true;
 				}
 				if(line.contains("?"))
 				{
-					currEvent = Statetype.CHI.ordinal();
-					if(!isChi){
-						m.events.add(currEvent);
-						isChi = true;
-					}
-					else
-						skipCount++;
+					uknown = true;
+				}else{
+					uknown = false;
+					isChi = false;
 				}
-				if(currEvent != Statetype.A.ordinal() && 
-				   currEvent != Statetype.B.ordinal() && 
-				   currEvent != Statetype.CHI.ordinal())
-				{
-					currEvent = Statetype.EMPTY.ordinal();
-					isChi=false;
+				short currEvent = parseEvent(playing, buffering, decoding, uknown);
+				if(uknown && !isChi){
 					m.events.add(currEvent);
+					isChi = true;
 				}
+				else
+					skipCount++;
+			
+//				if(currEvent != Statetype.A.ordinal() && 
+//				   currEvent != Statetype.B.ordinal() && 
+//				   currEvent != Statetype.CHI.ordinal())
+//				{
+//					currEvent = Statetype.EMPTY.ordinal();
+//					isChi=false;
+//					m.events.add(currEvent);
+//				}
 				if(m.events.size() >= buffSize)
 				{
 					m.runMon();
