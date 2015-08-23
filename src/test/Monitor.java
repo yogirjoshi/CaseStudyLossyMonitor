@@ -185,7 +185,7 @@ public class Monitor {
 		int skipCount=0;
 		RandomAccessFile pipe  = null;
 		try {
-			pipe = new RandomAccessFile(args[0], "r");
+			pipe = new RandomAccessFile(args[1], "r");
 			String line;
 
 			while ((line = pipe.readLine()) != null) {
