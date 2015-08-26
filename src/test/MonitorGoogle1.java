@@ -10,6 +10,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 public class MonitorGoogle1 {
 	int evtCounter = 0;
 	int currState; 
@@ -181,7 +182,7 @@ public class MonitorGoogle1 {
 			String line;
 
 			while ((line = br.readLine()) != null) {
-				boolean playing = false, audio = false, video = false, pause = false, uknown = false;
+				boolean uknown = false;
 				String csved[] = line.split(",");
 				short currEvent; 
 				if(csved[1].equals("2"))
@@ -190,28 +191,18 @@ public class MonitorGoogle1 {
 					currEvent = CHI;
 				}else{
 					uknown = false;
-					isChi = false;
 					currEvent = parseEvent(csved);
 				}
 
 
 				String jobid = csved[2], taskId = csved[3];
-				MonitorGoogle1 currMon = null;
-				if(!foMonitorMAP.containsKey(jobid+taskId))
-					foMonitorMAP.put(jobid+taskId, new MonitorGoogle1());
-				currMon = foMonitorMAP.get(jobid+taskId);
-				if(!uknown){
-					currMon.events.add(currEvent);
-				}else{
-					if(uknown && !isChi){
-						currMon.events.add(currEvent);
-						isChi = true;
-					}
-					else{
-						currMon.lostEvents++;
-					}
+				MonitorGoogle1 currMon = null;	
+				if(!foMonitorMAP.containsKey(jobid+"-"+taskId)){
+					foMonitorMAP.put(jobid+"-"+taskId, new MonitorGoogle1());
 				}
-			
+				currMon = foMonitorMAP.get(jobid+"-"+taskId);
+				
+				currMon.events.add(currEvent);
 //				if(currEvent != Statetype.A.ordinal() && 
 //				   currEvent != Statetype.B.ordinal() && 
 //				   currEvent != Statetype.CHI.ordinal())
