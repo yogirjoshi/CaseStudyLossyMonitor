@@ -96,10 +96,10 @@ public class MonitorGoogle4 {
 			case 2:
 				if(
 				predicateSTate == UPD_PEND)
-					return 0;
+					return 1;
 				if(predicateSTate == SCHEDULE_AND_UPD_PEND ||
 						predicateSTate == SCHEDULE)
-					return 1;
+					return 0;
 				return 2;
 			default:
 				break;
