@@ -121,7 +121,7 @@ public class MonitorGoogle3 {
 	}
 
 	public static short parseEvent(String csved[]){
-		boolean kfe = csved[5].equals("3") || csved[5].equals("5") || csved[5].equals("2");
+		boolean kfe = csved[5].equals("3") || csved[5].equals("5");// || csved[5].equals("2");
 		boolean sched = csved[5].equals("1");
 		boolean fin = csved[5].equals("4");
 		if(kfe && sched && fin)
