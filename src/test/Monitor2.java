@@ -11,7 +11,7 @@ import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
 public class Monitor2 {
 	int evtCounter = 0;
-	int currState;
+	int currState; 
 	ArrayList<Short> events;
 	long avgMontime;
 	public Monitor2()
