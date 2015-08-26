@@ -58,7 +58,7 @@ public class MonitorGoogle2 {
 			break;
 			
 		case 2:
-			currOutput = "FP";
+			currOutput = "?";
 			break;
 			
 		default:
