@@ -36,19 +36,19 @@ public class MonitorGoogle1 {
 
 	public void runMon()
 	{
-		long startTime = System.currentTimeMillis();
+//		long startTime = System.currentTimeMillis();
 		for(int i = 0 ; i < events.size();i++)
 		{
 			currState = performTransition(events.get(i));
 			evtCounter++;
-			System.out.println("Event : " + evtCounter + ", Verdict: "+ getOutputForState());
+//			System.out.println("Event : " + evtCounter + ", Verdict: "+ getOutputForState());
 		}
-		long stopTime = System.currentTimeMillis();
-	    long elapsedTime = stopTime - startTime;
-	    if(avgMontime == 0)
-	    	avgMontime = elapsedTime;
-	    else
-	    	avgMontime = (avgMontime + elapsedTime) / 2;
+//		long stopTime = System.currentTimeMillis();
+//	    long elapsedTime = stopTime - startTime;
+//	    if(avgMontime == 0)
+//	    	avgMontime = elapsedTime;
+//	    else
+//	    	avgMontime = (avgMontime + elapsedTime) / 2;
 	}
 	protected final String getOutputForState()
 	{
