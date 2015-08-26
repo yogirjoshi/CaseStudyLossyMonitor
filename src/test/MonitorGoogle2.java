@@ -95,10 +95,10 @@ public class MonitorGoogle2 {
 			case 2:
 				if(
 				predicateSTate == EVICT)
-					return 0;
+					return 1;
 				if(predicateSTate == EVICT_AND_SUBMIT ||
 						predicateSTate == SUBMIT)
-					return 1;
+					return 0;
 				return 2;
 			default:
 				break;
