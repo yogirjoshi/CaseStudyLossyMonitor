@@ -71,21 +71,23 @@ public class MonitorGoogle4 {
 	{
 		switch (currState) {
 			case 0:
-				if(predicateSTate == UPD_PEND ||
-				predicateSTate == EMPTY )
-					return 0;
-				if(predicateSTate == SCHEDULE_AND_UPD_PEND ||
-					predicateSTate == SCHEDULE )
-					return 1;
-				if(predicateSTate == CHI)
-					return 2;
-				break;
-			case 1:  
+
 				if(predicateSTate == UPD_PEND)
 					return 0;
 				if(predicateSTate == SCHEDULE_AND_UPD_PEND ||
 					predicateSTate == SCHEDULE ||
 					predicateSTate == EMPTY)
+					return 1;
+				if(predicateSTate == CHI)
+					return 2;
+				break;
+			case 1:  
+
+				if(predicateSTate == UPD_PEND ||
+				predicateSTate == EMPTY )
+					return 0;
+				if(predicateSTate == SCHEDULE_AND_UPD_PEND ||
+					predicateSTate == SCHEDULE )
 					return 1;
 				if(predicateSTate == CHI)
 					return 2;

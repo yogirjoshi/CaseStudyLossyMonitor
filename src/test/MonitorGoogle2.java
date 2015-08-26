@@ -71,21 +71,22 @@ public class MonitorGoogle2 {
 	{
 		switch (currState) {
 			case 0:
-				if(predicateSTate == EVICT ||
-				predicateSTate == EMPTY )
-					return 0;
-				if(predicateSTate == EVICT_AND_SUBMIT ||
-					predicateSTate == SUBMIT )
-					return 1;
-				if(predicateSTate == CHI)
-					return 2;
-				break;
-			case 1:  
 				if(predicateSTate == EVICT)
 					return 0;
 				if(predicateSTate == EVICT_AND_SUBMIT ||
 					predicateSTate == SUBMIT ||
 					predicateSTate == EMPTY)
+					return 1;
+				if(predicateSTate == CHI)
+					return 2;
+				break;
+				
+			case 1:  
+				if(predicateSTate == EVICT ||
+				predicateSTate == EMPTY )
+					return 0;
+				if(predicateSTate == EVICT_AND_SUBMIT ||
+					predicateSTate == SUBMIT )
 					return 1;
 				if(predicateSTate == CHI)
 					return 2;
