@@ -76,14 +76,14 @@ public class MonitorGoogle3 {
 	{
 		switch (currState) {
 			case 0:
-				if(predicateSTate == KFE ||
-				predicateSTate == KFE_AND_SCHEDULE|| 
-				predicateSTate == SCHEDULE ||
-				predicateSTate == EMPTY )
+				if(predicateSTate == KFE_AND_SCHEDULE|| 
+				predicateSTate == SCHEDULE)
 					return 1;
 				if(predicateSTate == FINISH ||
 					predicateSTate == FINISH_AND_SCHEDULE ||
 					predicateSTate == FINISH_AND_KFE ||
+					predicateSTate == KFE ||
+					predicateSTate == EMPTY ||
 					predicateSTate == FINISH_AND_KFE_AND_SCHEDULE)
 					return 0;
 				if(predicateSTate == CHI)
@@ -91,14 +91,14 @@ public class MonitorGoogle3 {
 				break;
 			case 1:  
 				if(	predicateSTate == KFE_AND_SCHEDULE|| 
-				predicateSTate == SCHEDULE)
+				predicateSTate == SCHEDULE ||
+				predicateSTate == KFE ||
+				predicateSTate == EMPTY)
 					return 1;
 				if(predicateSTate == FINISH ||
-					predicateSTate == KFE ||
 					predicateSTate == FINISH_AND_SCHEDULE ||
 					predicateSTate == FINISH_AND_KFE ||
-					predicateSTate == FINISH_AND_KFE_AND_SCHEDULE ||
-					predicateSTate == EMPTY)
+					predicateSTate == FINISH_AND_KFE_AND_SCHEDULE )
 					return 0;
 				if(predicateSTate == CHI)
 					return 2;
@@ -106,12 +106,12 @@ public class MonitorGoogle3 {
 			case 2:
 				if(	predicateSTate == KFE_AND_SCHEDULE|| 
 				predicateSTate == SCHEDULE)
-					return 0;
+					return 1;
 				if(predicateSTate == FINISH ||
 						predicateSTate == FINISH_AND_SCHEDULE ||
 						predicateSTate == FINISH_AND_KFE ||
 						predicateSTate == FINISH_AND_KFE_AND_SCHEDULE)
-						return 1;
+						return 0;
 				return 2;
 				
 			default:
