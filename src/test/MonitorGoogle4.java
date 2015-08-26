@@ -73,11 +73,11 @@ public class MonitorGoogle4 {
 			case 0:
 
 				if(predicateSTate == UPD_PEND)
-					return 0;
+					return 1;
 				if(predicateSTate == SCHEDULE_AND_UPD_PEND ||
 					predicateSTate == SCHEDULE ||
 					predicateSTate == EMPTY)
-					return 1;
+					return 0;
 				if(predicateSTate == CHI)
 					return 2;
 				break;
@@ -85,10 +85,10 @@ public class MonitorGoogle4 {
 
 				if(predicateSTate == UPD_PEND ||
 				predicateSTate == EMPTY )
-					return 0;
+					return 1;
 				if(predicateSTate == SCHEDULE_AND_UPD_PEND ||
 					predicateSTate == SCHEDULE )
-					return 1;
+					return 0;
 				if(predicateSTate == CHI)
 					return 2;
 				break;

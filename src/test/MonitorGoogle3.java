@@ -80,26 +80,26 @@ public class MonitorGoogle3 {
 				predicateSTate == KFE_AND_SCHEDULE|| 
 				predicateSTate == SCHEDULE ||
 				predicateSTate == EMPTY )
-					return 0;
+					return 1;
 				if(predicateSTate == FINISH ||
 					predicateSTate == FINISH_AND_SCHEDULE ||
 					predicateSTate == FINISH_AND_KFE ||
 					predicateSTate == FINISH_AND_KFE_AND_SCHEDULE)
-					return 1;
+					return 0;
 				if(predicateSTate == CHI)
 					return 2;
 				break;
 			case 1:  
 				if(	predicateSTate == KFE_AND_SCHEDULE|| 
 				predicateSTate == SCHEDULE)
-					return 0;
+					return 1;
 				if(predicateSTate == FINISH ||
 					predicateSTate == KFE ||
 					predicateSTate == FINISH_AND_SCHEDULE ||
 					predicateSTate == FINISH_AND_KFE ||
 					predicateSTate == FINISH_AND_KFE_AND_SCHEDULE ||
 					predicateSTate == EMPTY)
-					return 1;
+					return 0;
 				if(predicateSTate == CHI)
 					return 2;
 				break;
