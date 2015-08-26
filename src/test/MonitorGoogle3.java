@@ -125,7 +125,7 @@ public class MonitorGoogle3 {
 	}
 
 	public static short parseEvent(String csved[]){
-		boolean sched = csved[5].equals("1");// || csved[5].equals("2");
+		boolean sched = csved[5].equals("2");// || csved[5].equals("2");
 		boolean submit = csved[5].equals("0");
 		boolean upd_runn = csved[5].equals("8");
 		if(sched && submit && upd_runn)
