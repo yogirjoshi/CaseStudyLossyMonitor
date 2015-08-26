@@ -24,14 +24,14 @@ public class MonitorGoogle3 {
 		avgMontime = 0;
 	}
 
-	final static short FINISH = 0; 
-	final static short KFE = 1;
-	final static short SCHEDULE = 2;
-	final static short FINISH_AND_KFE = 3;
-	final static short FINISH_AND_SCHEDULE = 4;
-	final static short KFE_AND_SCHEDULE = 5;
+	final static short SCHED = 0; 
+	final static short SUBMITTED = 1;
+	final static short UPD_RUNNING = 2;
+	final static short SCHED_AND_SUBMITTED = 3;
+	final static short SCHED_AND_UPD_RUNNINGE = 4;
+	final static short SUBMITTED_AND_UPD_RUNNING= 5;
 	
-	final static short FINISH_AND_KFE_AND_SCHEDULE = 6;
+	final static short SCHED_AND_SUBMITTED_AND_UPD_RUNNING = 6;
 	final static short EMPTY = 7;
 	final static short CHI = 8;
 
@@ -76,68 +76,72 @@ public class MonitorGoogle3 {
 	{
 		switch (currState) {
 			case 0:
-				if(predicateSTate == KFE_AND_SCHEDULE|| 
-				predicateSTate == SCHEDULE)
-					return 1;
-				if(predicateSTate == FINISH ||
-					predicateSTate == FINISH_AND_SCHEDULE ||
-					predicateSTate == FINISH_AND_KFE ||
-					predicateSTate == KFE ||
-					predicateSTate == EMPTY ||
-					predicateSTate == FINISH_AND_KFE_AND_SCHEDULE)
+				if(predicateSTate == SCHED_AND_SUBMITTED_AND_UPD_RUNNING ||
+				predicateSTate == SUBMITTED_AND_UPD_RUNNING ||
+				predicateSTate == SUBMITTED ||
+				predicateSTate == SCHED_AND_SUBMITTED ||
+				predicateSTate == UPD_RUNNING)
 					return 0;
+				if(predicateSTate == SCHED_AND_UPD_RUNNINGE||
+						predicateSTate == EMPTY ||
+						predicateSTate == SCHED)
+					return 1;
+
 				if(predicateSTate == CHI)
 					return 2;
 				break;
 			case 1:  
-				if(	predicateSTate == KFE_AND_SCHEDULE|| 
-				predicateSTate == SCHEDULE ||
-				predicateSTate == KFE ||
-				predicateSTate == EMPTY)
-					return 1;
-				if(predicateSTate == FINISH ||
-					predicateSTate == FINISH_AND_SCHEDULE ||
-					predicateSTate == FINISH_AND_KFE ||
-					predicateSTate == FINISH_AND_KFE_AND_SCHEDULE )
+				if(predicateSTate == SCHED_AND_SUBMITTED_AND_UPD_RUNNING ||
+				predicateSTate == SUBMITTED_AND_UPD_RUNNING ||
+				predicateSTate == SUBMITTED ||
+				predicateSTate == SCHED_AND_SUBMITTED )
 					return 0;
+				if(predicateSTate == SCHED_AND_UPD_RUNNINGE||
+						predicateSTate == EMPTY ||
+						predicateSTate == SCHED ||
+						predicateSTate == UPD_RUNNING)
+					return 1;
+
 				if(predicateSTate == CHI)
 					return 2;
 				break;
 			case 2:
-				if(	predicateSTate == KFE_AND_SCHEDULE|| 
-				predicateSTate == SCHEDULE)
+				if(predicateSTate == SCHED_AND_SUBMITTED_AND_UPD_RUNNING ||
+				predicateSTate == SUBMITTED_AND_UPD_RUNNING ||
+				predicateSTate == SUBMITTED ||
+				predicateSTate == SCHED_AND_SUBMITTED )
+					return 0;
+				if(predicateSTate == SCHED_AND_UPD_RUNNINGE||
+						predicateSTate == EMPTY ||
+						predicateSTate == SCHED)
 					return 1;
-				if(predicateSTate == FINISH ||
-						predicateSTate == FINISH_AND_SCHEDULE ||
-						predicateSTate == FINISH_AND_KFE ||
-						predicateSTate == FINISH_AND_KFE_AND_SCHEDULE)
-						return 0;
+
 				return 2;
 				
 			default:
 				break;
 		}
-		return 0;
+		return -1;
 	}
 
 	public static short parseEvent(String csved[]){
-		boolean kfe = csved[5].equals("3") || csved[5].equals("5");// || csved[5].equals("2");
-		boolean sched = csved[5].equals("1");
-		boolean fin = csved[5].equals("4");
-		if(kfe && sched && fin)
-			return FINISH_AND_KFE_AND_SCHEDULE;
-		if(fin && kfe )
-			return FINISH_AND_KFE;
-		if(fin && sched )
-			return FINISH_AND_SCHEDULE;
-		if(kfe && fin)
-			return FINISH_AND_KFE;
-		if(fin)
-			return FINISH;
-		if(kfe)
-			return KFE;
+		boolean sched = csved[5].equals("1");// || csved[5].equals("2");
+		boolean submit = csved[5].equals("0");
+		boolean upd_runn = csved[5].equals("8");
+		if(sched && submit && upd_runn)
+			return SCHED_AND_SUBMITTED_AND_UPD_RUNNING;
+		if(sched && submit )
+			return SCHED_AND_SUBMITTED;
+		if(sched && upd_runn )
+			return SCHED_AND_UPD_RUNNINGE;
+		if(submit && upd_runn)
+			return SUBMITTED_AND_UPD_RUNNING;
 		if(sched)
-			return SCHEDULE;
+			return SCHED;
+		if(submit)
+			return SUBMITTED;
+		if(upd_runn)
+			return UPD_RUNNING;
 		return EMPTY;
 			
 	}

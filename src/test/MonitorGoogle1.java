@@ -145,7 +145,7 @@ public class MonitorGoogle1 {
 			default:
 				break;
 		}
-		return 0;
+		return -1;
 	}
 
 	public static short parseEvent(String csved[]){
