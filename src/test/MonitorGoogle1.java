@@ -131,17 +131,26 @@ public class MonitorGoogle1 {
 					return 1;
 				if(	predicateSTate == KFE_AND_SUB )
 					return 2;
-				return 3;
+				if(	predicateSTate == EMPTY ||
+						predicateSTate == KFE  ||
+						predicateSTate == CHI ||
+						predicateSTate == SUB ||
+						predicateSTate == FIN ||
+						predicateSTate == FIN_AND_SUB)
+					return 4;	
 			case 4:
 				if(predicateSTate == FIN_AND_KFE ||
 					predicateSTate == FIN_AND_KFE_AND_SUB ||
 					predicateSTate == FIN_AND_SUB ||
-					predicateSTate == SUB)
+					predicateSTate == FIN)
 					return 1;
 				if(	predicateSTate == KFE_AND_SUB ||
 						predicateSTate == SUB)
 					return 2;
-				return 4;	
+				if(	predicateSTate == EMPTY ||
+						predicateSTate == KFE  ||
+						predicateSTate == CHI)
+					return 4;	
 			default:
 				break;
 		}
