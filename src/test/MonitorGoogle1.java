@@ -194,7 +194,7 @@ public class MonitorGoogle1 {
 				boolean uknown = false;
 				String csved[] = line.split(",");
 				short currEvent; 
-				if(csved[1].equals("2") || csved[1].equals("1") || csved[1].equals("0"))
+				if(csved[1].equals("2") || csved[1].equals("1"))
 				{
 					uknown = true;
 					currEvent = CHI;
@@ -248,11 +248,11 @@ public class MonitorGoogle1 {
 			totalSkipped+=cMon.lostEvents;
 					
 		}
-		System.out.println("TLOSSMonitors=" + TLossMonitors +
-							",PLOSSMonitors=" + PLossMonitors +
-							",PRESUMABLY TRUE=" + satMonitors +
-							",PRESUMABLY FALSE=" + unsatMonitor +
-							",SKIPPED EVENTS=" + totalSkipped);
+		System.out.println("Processed=" + TLossMonitors +
+							", Skipped=" + PLossMonitors +
+							", PRESUMABLY TRUE=" + satMonitors +
+							", PRESUMABLY FALSE=" + unsatMonitor +
+							", SKIPPED EVENTS=" + totalSkipped);
 	}
 
 }
