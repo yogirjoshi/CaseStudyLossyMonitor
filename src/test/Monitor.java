@@ -211,8 +211,8 @@ public class Monitor {
 				short currEvent = parseEvent(playing, buffering, decoding, uknown);
 				if(!uknown)
 					m.events.add(currEvent);
-				
-				if(uknown && !isChi){
+//				if(uknown && !isChi){
+				if(uknown){
 					m.events.add(currEvent);
 					isChi = true;
 				}
