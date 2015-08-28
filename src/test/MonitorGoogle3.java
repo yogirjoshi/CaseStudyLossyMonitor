@@ -24,16 +24,27 @@ public class MonitorGoogle3 {
 		avgMontime = 0;
 	}
 
-	final static short SCHED = 0; 
-	final static short SUBMITTED = 1;
-	final static short UPD_RUNNING = 2;
-	final static short SCHED_AND_SUBMITTED = 3;
-	final static short SCHED_AND_UPD_RUNNINGE = 4;
-	final static short SUBMITTED_AND_UPD_RUNNING= 5;
+	final static short FINISH = 0; 
+	final static short SCHEDULE = 1;
+	final static short UPD_PENDING = 2;
+	final static short UPD_RUNNING = 3;
 	
-	final static short SCHED_AND_SUBMITTED_AND_UPD_RUNNING = 6;
-	final static short EMPTY = 7;
-	final static short CHI = 8;
+	final static short FINISH_AND_SCHEDULE= 4;
+	final static short FINISH_AND_UPD_PENDING= 5;
+	final static short FINISH_AND_UPD_RUNNING= 6;
+	final static short SCHEDULE_AND_UPD_PENDING= 7;
+	final static short SCHEDULE_AND_UPD_RUNNING= 8;
+	final static short UPD_PENDING_AND_UPD_RUNNING= 9;
+	
+	final static short FINISH_AND_SCHEDULE_AND_UPD_PENDING = 10;
+	final static short FINISH_AND_SCHEDULE_AND_UPD_RUNNING = 11;
+	final static short FINISH_AND_UPD_PENDING_AND_UPD_RUNNING = 12;
+	final static short SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING = 13;
+	
+	final static short FINISH_SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING = 14;
+	
+	final static short EMPTY = 15;
+	final static short CHI = 16;
 
 	public void runMon()
 	{
@@ -59,15 +70,20 @@ public class MonitorGoogle3 {
 			currOutput = "TP";
 			break;
 		case 1:
-			currOutput = "FP";
+			currOutput = "TP";
 			break;
-			
 		case 2:
+			currOutput = "FP";
+			break;	
+		case 3:
+			currOutput = "TP";
+			break;
+		case 4:
 			currOutput = "?";
 			break;
-	
+			
 		default:
-
+			System.out.println("Here by mitsake!");
 			break;
 		}
 		return currOutput;
@@ -76,72 +92,180 @@ public class MonitorGoogle3 {
 	{
 		switch (currState) {
 			case 0:
-				if(predicateSTate == SCHED_AND_SUBMITTED_AND_UPD_RUNNING ||
-				predicateSTate == SUBMITTED_AND_UPD_RUNNING ||
-				predicateSTate == SUBMITTED ||
-				predicateSTate == SCHED_AND_SUBMITTED ||
-				predicateSTate == UPD_RUNNING)
+				if(predicateSTate == FINISH_AND_SCHEDULE_AND_UPD_RUNNING ||
+				predicateSTate == FINISH_AND_SCHEDULE_AND_UPD_PENDING ||
+				predicateSTate == FINISH_AND_UPD_RUNNING ||
+				predicateSTate == FINISH_SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING||
+				predicateSTate == EMPTY ||
+				predicateSTate == FINISH ||
+				predicateSTate == SCHEDULE ||
+				predicateSTate == SCHEDULE_AND_UPD_PENDING ||
+				predicateSTate == FINISH_AND_SCHEDULE
+				)
 					return 0;
-				if(predicateSTate == SCHED_AND_UPD_RUNNINGE||
-						predicateSTate == EMPTY ||
-						predicateSTate == SCHED)
+				
+				if(predicateSTate == UPD_PENDING||
+						predicateSTate == FINISH_AND_UPD_PENDING ||
+						predicateSTate == FINISH_AND_UPD_PENDING_AND_UPD_RUNNING
+					)
 					return 1;
-
-				if(predicateSTate == CHI)
+				
+				if(predicateSTate == SCHEDULE_AND_UPD_RUNNING ||
+						predicateSTate == SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING ||
+						predicateSTate == UPD_RUNNING
+						)
 					return 2;
+				if(predicateSTate == UPD_PENDING_AND_UPD_RUNNING)
+					return 3;
+				if(predicateSTate == CHI)
+					return 4;
 				break;
 			case 1:  
-				if(predicateSTate == SCHED_AND_SUBMITTED_AND_UPD_RUNNING ||
-				predicateSTate == SUBMITTED_AND_UPD_RUNNING ||
-				predicateSTate == SUBMITTED ||
-				predicateSTate == SCHED_AND_SUBMITTED )
+				if(predicateSTate == FINISH_AND_SCHEDULE_AND_UPD_RUNNING ||
+				predicateSTate == FINISH_AND_SCHEDULE_AND_UPD_PENDING ||
+				predicateSTate == FINISH_SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING ||
+				predicateSTate ==  SCHEDULE ||
+				predicateSTate == SCHEDULE_AND_UPD_RUNNING ||
+				predicateSTate == FINISH_AND_SCHEDULE 
+				)
 					return 0;
-				if(predicateSTate == SCHED_AND_UPD_RUNNINGE||
+				
+				if(predicateSTate == UPD_PENDING||
+						predicateSTate == FINISH_AND_UPD_RUNNING ||
+						predicateSTate == FINISH_AND_UPD_PENDING ||
 						predicateSTate == EMPTY ||
-						predicateSTate == SCHED ||
-						predicateSTate == UPD_RUNNING)
+						predicateSTate == FINISH ||
+						predicateSTate == FINISH_AND_UPD_PENDING_AND_UPD_RUNNING)
 					return 1;
 
-				if(predicateSTate == CHI)
+				if(predicateSTate == SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING ||
+						predicateSTate == SCHEDULE_AND_UPD_RUNNING)
 					return 2;
+				if(	predicateSTate == UPD_RUNNING ||
+						predicateSTate == UPD_PENDING_AND_UPD_RUNNING)
+					return 3;
+				if(predicateSTate == CHI)
+					return 4;
 				break;
 			case 2:
-				if(predicateSTate == SCHED_AND_SUBMITTED_AND_UPD_RUNNING ||
-				predicateSTate == SUBMITTED_AND_UPD_RUNNING ||
-				predicateSTate == SUBMITTED ||
-				predicateSTate == SCHED_AND_SUBMITTED )
+				if(predicateSTate == FINISH_AND_SCHEDULE_AND_UPD_RUNNING ||
+					predicateSTate == FINISH_AND_SCHEDULE_AND_UPD_PENDING ||
+					predicateSTate == FINISH_AND_UPD_RUNNING ||
+					predicateSTate == FINISH_SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING ||
+					predicateSTate == FINISH ||
+					predicateSTate == FINISH_AND_SCHEDULE)
 					return 0;
-				if(predicateSTate == SCHED_AND_UPD_RUNNINGE||
-						predicateSTate == EMPTY ||
-						predicateSTate == SCHED)
+				if(predicateSTate == FINISH_AND_UPD_PENDING||
+					predicateSTate == FINISH_AND_UPD_PENDING_AND_UPD_RUNNING)
 					return 1;
-
-				return 2;
-				
+				if(predicateSTate == SCHEDULE_AND_UPD_PENDING||
+						predicateSTate == SCHEDULE_AND_UPD_PENDING|| 
+				predicateSTate == EMPTY ||
+				predicateSTate == SCHEDULE ||
+				predicateSTate == SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING ||
+				predicateSTate == UPD_RUNNING
+				)
+					return 2;
+				if(predicateSTate == UPD_PENDING_AND_UPD_RUNNING ||
+						predicateSTate ==UPD_PENDING)
+					return 3;
+				if(predicateSTate == CHI)
+					return 4;
+			case 3:
+				if(predicateSTate ==FINISH_AND_SCHEDULE_AND_UPD_RUNNING ||
+				predicateSTate == FINISH_AND_SCHEDULE_AND_UPD_PENDING ||
+				predicateSTate == FINISH_SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING ||
+				predicateSTate == FINISH_AND_SCHEDULE )
+					return 0;
+				if(predicateSTate == FINISH_AND_UPD_RUNNING ||
+						predicateSTate == FINISH_AND_UPD_PENDING ||
+						predicateSTate == FINISH ||
+						predicateSTate == FINISH_AND_UPD_PENDING_AND_UPD_RUNNING
+						)
+					return 1;
+				if(predicateSTate == SCHEDULE_AND_UPD_RUNNING ||
+						predicateSTate == SCHEDULE ||
+						predicateSTate == SCHEDULE_AND_UPD_PENDING ||
+						predicateSTate == SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING
+						)
+					return 2;
+				if(predicateSTate == UPD_PENDING ||
+						predicateSTate == EMPTY ||
+						predicateSTate == UPD_PENDING_AND_UPD_RUNNING ||
+						predicateSTate == UPD_RUNNING
+						)
+					return 3;
+				if(predicateSTate == CHI)
+					return 4;
+			case 4:	
+				if(predicateSTate == FINISH_AND_SCHEDULE_AND_UPD_RUNNING ||
+						predicateSTate == FINISH_AND_SCHEDULE_AND_UPD_PENDING ||
+						predicateSTate == FINISH_SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING ||
+						predicateSTate == FINISH_AND_SCHEDULE  )
+					return 0;
+				if(predicateSTate == FINISH_AND_SCHEDULE_AND_UPD_PENDING ||
+						predicateSTate == FINISH_AND_UPD_PENDING_AND_UPD_RUNNING 
+						)
+					return 1;
+				if(predicateSTate == SCHEDULE_AND_UPD_RUNNING ||
+						predicateSTate == SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING)
+					return 2;
+				if(predicateSTate == UPD_PENDING_AND_UPD_RUNNING )
+					return 3;
+				if(predicateSTate ==UPD_PENDING ||
+						predicateSTate ==FINISH_AND_UPD_RUNNING ||
+						predicateSTate == EMPTY ||
+						predicateSTate == FINISH ||
+						predicateSTate == SCHEDULE ||
+						predicateSTate == SCHEDULE_AND_UPD_PENDING ||
+						predicateSTate == UPD_RUNNING ||
+						predicateSTate == CHI)
+					return 4;
 			default:
 				break;
 		}
+		System.out.println("Here by mitsake!");
 		return -1;
 	}
 
 	public static short parseEvent(String csved[]){
+
+		boolean finish = csved[5].equals("4");
 		boolean sched = csved[5].equals("2");// || csved[5].equals("2");
-		boolean submit = csved[5].equals("4");
+		boolean upd_pend = csved[5].equals("7");
 		boolean upd_runn = csved[5].equals("8");
-		if(sched && submit && upd_runn)
-			return SCHED_AND_SUBMITTED_AND_UPD_RUNNING;
-		if(sched && submit )
-			return SCHED_AND_SUBMITTED;
-		if(sched && upd_runn )
-			return SCHED_AND_UPD_RUNNINGE;
-		if(submit && upd_runn)
-			return SUBMITTED_AND_UPD_RUNNING;
+//		System.out.println(Boolean.toString(sched) + Boolean.toString(submit) + Boolean.toString(upd_runn));
+		if(finish && sched && upd_pend && upd_runn)
+			return FINISH_SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING;
+		if(finish && sched && upd_pend )
+			return FINISH_AND_SCHEDULE_AND_UPD_PENDING;
+		if(finish && sched && upd_runn )
+			return FINISH_AND_SCHEDULE_AND_UPD_RUNNING;
+		if(sched && upd_runn && upd_runn )
+			return SCHEDULE_AND_UPD_PENDING_AND_UPD_RUNNING;
+		if(finish && upd_pend && upd_runn )
+			return FINISH_AND_UPD_PENDING_AND_UPD_RUNNING;
+		if(finish && sched)
+			return FINISH_AND_SCHEDULE;
+		if(finish && upd_pend)
+			return FINISH_AND_UPD_PENDING;
+		if(finish && upd_runn)
+			return FINISH_AND_UPD_RUNNING;
+		if(sched && upd_pend)
+			return SCHEDULE_AND_UPD_PENDING;
+		if(sched && upd_runn)
+			return SCHEDULE_AND_UPD_RUNNING;
+		if(upd_pend && upd_runn)
+			return UPD_PENDING_AND_UPD_RUNNING;
+		if(finish)
+			return FINISH;
 		if(sched)
-			return SCHED;
-		if(submit)
-			return SUBMITTED;
+			return SCHEDULE;
+		if(upd_pend)
+			return UPD_PENDING;
 		if(upd_runn)
 			return UPD_RUNNING;
+
 		return EMPTY;
 			
 	}
@@ -161,7 +285,7 @@ public class MonitorGoogle3 {
 				boolean uknown = false;
 				String csved[] = line.split(",");
 				short currEvent; 
-				if(csved[1].equals("2"))
+				if(csved[1].equals("2") || csved[1].equals("1") || csved[1].equals("0"))
 				{
 					uknown = true;
 					currEvent = CHI;
