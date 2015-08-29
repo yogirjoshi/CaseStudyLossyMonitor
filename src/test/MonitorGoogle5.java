@@ -193,7 +193,7 @@ public class MonitorGoogle5 {
 				", Skipped=" + PLossMonitors +
 				", PRESUMABLY TRUE=" + satMonitors +
 				", PRESUMABLY FALSE=" + unsatMonitor +
-				", SKIPPED EVENTS=" + totalSkipped);
+				", SKIPPED EVENTS=" + totalSkipped); 
 	}
 
 }
