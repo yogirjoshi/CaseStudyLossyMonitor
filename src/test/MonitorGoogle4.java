@@ -135,7 +135,7 @@ public class MonitorGoogle4 {
 				boolean uknown = false;
 				String csved[] = line.split(",");
 				short currEvent; 
-				if(csved[1].equals("2"))
+				if(csved[1].equals("1") && (csved[5].equals("7") || csved[5].equals("1")))
 				{
 					uknown = true;
 					currEvent = CHI;

@@ -11,31 +11,24 @@ import java.lang.management.MonitorInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-public class MonitorGoogle1 {
+public class MonitorGoogle5 {
 	int evtCounter = 0;
 	int currState; 
 	ArrayList<Short> events;
 	long avgMontime;
 	int lostEvents = 0;
-	String currJobTask;
-	public MonitorGoogle1(String currJobTask)
+	public MonitorGoogle5()
 	{
 		events = new ArrayList<Short>();
 		currState = 0;
 		avgMontime = 0;
-		this.currJobTask = currJobTask;
 	}
 
-	final static short FIN = 0; 
-	final static short KFE = 1;
-	final static short SUB = 2;
-	final static short FIN_AND_KFE = 3;
-	final static short FIN_AND_SUB = 4;
-	final static short KFE_AND_SUB = 5;
-	
-	final static short FIN_AND_KFE_AND_SUB = 6;
-	final static short EMPTY = 7;
-	final static short CHI = 8;
+	final static short SUBMIT = 0; 
+	final static short FINISH = 1;
+	final static short SUBMIT_AND_FINISH = 2;
+	final static short EMPTY = 3;
+	final static short CHI = 4;
 
 	public void runMon()
 	{
@@ -61,19 +54,13 @@ public class MonitorGoogle1 {
 			currOutput = "TP";
 			break;
 		case 1:
-			currOutput = "TP";
+			currOutput = "FP";
 			break;
 			
 		case 2:
-			currOutput = "FP";
-			break;
-		case 3:
 			currOutput = "?";
 			break;
-		case 4:
-			currOutput = "?";
-			break;
-	
+			
 		default:
 
 			break;
@@ -84,78 +71,35 @@ public class MonitorGoogle1 {
 	{
 		switch (currState) {
 			case 0:
-
-				if(predicateSTate == SUB ||
-				predicateSTate == FIN_AND_SUB || 
-				predicateSTate == FIN ||
-				predicateSTate == EMPTY )
+				if(predicateSTate == SUBMIT)
+					return 1;
+				if(predicateSTate == SUBMIT_AND_FINISH ||
+					predicateSTate == FINISH  ||
+					predicateSTate == EMPTY)
 					return 0;
-				if(predicateSTate == FIN_AND_KFE_AND_SUB ||
-					predicateSTate == KFE ||
-					predicateSTate == FIN_AND_KFE)
-					return 1;
-				if(predicateSTate == KFE_AND_SUB)
-					return 2;
 				if(predicateSTate == CHI)
-					return 3;
+					return 2;
 				break;
+				
 			case 1:  
-
-				if(predicateSTate == FIN_AND_SUB ||
-				predicateSTate == KFE ||
-				predicateSTate == FIN_AND_KFE ||
-				predicateSTate == FIN ||
-				predicateSTate == FIN_AND_KFE_AND_SUB ||
-				predicateSTate == EMPTY)
+				if(predicateSTate == SUBMIT ||
+				predicateSTate == EMPTY )
 					return 1;
-				if(predicateSTate == KFE_AND_SUB ||
-						predicateSTate == SUB)
-					return 2;
+				if(predicateSTate == SUBMIT_AND_FINISH ||
+					predicateSTate == FINISH )
+					return 0;
 				if(predicateSTate == CHI)
-					return 4;
+					return 2;
 				break;
+				
 			case 2:
 				if(
-				predicateSTate == FIN_AND_KFE ||
-				predicateSTate == FIN_AND_SUB ||
-				predicateSTate == FIN_AND_KFE_AND_SUB||
-				predicateSTate == FIN)
+				predicateSTate == SUBMIT)
 					return 1;
-				if(predicateSTate == KFE_AND_SUB ||
-						predicateSTate == SUB ||
-						predicateSTate == EMPTY ||
-						predicateSTate == KFE)
-					return 2;
-				if(predicateSTate == CHI)
-					return 4;
-				break;
-			case 3:
-				if(predicateSTate == FIN_AND_KFE ||
-					predicateSTate == FIN_AND_KFE_AND_SUB)
-					return 1;
-				if(	predicateSTate == KFE_AND_SUB )
-					return 2;
-				if(	predicateSTate == EMPTY ||
-						predicateSTate == KFE  ||
-						predicateSTate == CHI ||
-						predicateSTate == SUB ||
-						predicateSTate == FIN ||
-						predicateSTate == FIN_AND_SUB)
-					return 4;	
-			case 4:
-
-				if(predicateSTate == FIN_AND_KFE ||
-					predicateSTate == FIN_AND_KFE_AND_SUB ||
-					predicateSTate == FIN_AND_SUB ||
-					predicateSTate == FIN)
-					return 1;
-				if(	predicateSTate == KFE_AND_SUB ||
-						predicateSTate == SUB)
-					return 2;
-				if(	predicateSTate == EMPTY ||
-						predicateSTate == KFE  ||
-						predicateSTate == CHI)
-					return 4;	
+				if(predicateSTate == SUBMIT_AND_FINISH ||
+						predicateSTate == FINISH)
+					return 0;
+				return 2;
 			default:
 				break;
 		}
@@ -163,29 +107,20 @@ public class MonitorGoogle1 {
 	}
 
 	public static short parseEvent(String csved[]){
-		boolean kfe = csved[5].equals("3") || csved[5].equals("5") || csved[5].equals("2");
-		boolean fin = csved[5].equals("4");
 		boolean sub = csved[5].equals("0");
-		if(fin && kfe && sub)
-			return FIN_AND_KFE_AND_SUB;
-		if(fin && kfe )
-			return FIN_AND_KFE;
-		if(fin && sub )
-			return FIN_AND_SUB;
-		if(kfe && sub)
-			return KFE_AND_SUB;
-		if(fin)
-			return FIN;
-		if(kfe)
-			return KFE;
+		boolean finish = csved[5].equals("4");
+		if(sub && finish)
+			return SUBMIT_AND_FINISH;
+		if(finish)
+			return FINISH;
 		if(sub)
-			return SUB;
+			return SUBMIT;
 		return EMPTY;
 			
 	}
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
-		HashMap<String,MonitorGoogle1> foMonitorMAP = new HashMap<>();
+		HashMap<String,MonitorGoogle5> foMonitorMAP = new HashMap<>();
 //		System.out.println(args[1]);
 //		if(mype.equals("BTRV"))
 //		else
@@ -211,9 +146,9 @@ public class MonitorGoogle1 {
 
 
 				String jobid = csved[2], taskId = csved[3];
-				MonitorGoogle1 currMon = null;	
+				MonitorGoogle5 currMon = null;	
 				if(!foMonitorMAP.containsKey(jobid+"-"+taskId)){
-					foMonitorMAP.put(jobid+"-"+taskId, new MonitorGoogle1(jobid+"-"+taskId));
+					foMonitorMAP.put(jobid+"-"+taskId, new MonitorGoogle5());
 				}
 				currMon = foMonitorMAP.get(jobid+"-"+taskId);
 				
@@ -241,7 +176,7 @@ public class MonitorGoogle1 {
 			}
 		}
 		long TLossMonitors = 0, PLossMonitors = 0, satMonitors = 0, unsatMonitor = 0, totalSkipped = 0;
-		for(MonitorGoogle1 cMon:foMonitorMAP.values()){
+		for(MonitorGoogle5 cMon:foMonitorMAP.values()){
 			if(cMon.getOutputForState().equals("TP")){
 				TLossMonitors++; satMonitors++;
 			}
@@ -255,10 +190,10 @@ public class MonitorGoogle1 {
 					
 		}
 		System.out.println("Processed=" + TLossMonitors +
-							", Skipped=" + PLossMonitors +
-							", PRESUMABLY TRUE=" + satMonitors +
-							", PRESUMABLY FALSE=" + unsatMonitor +
-							", SKIPPED EVENTS=" + totalSkipped);
+				", Skipped=" + PLossMonitors +
+				", PRESUMABLY TRUE=" + satMonitors +
+				", PRESUMABLY FALSE=" + unsatMonitor +
+				", SKIPPED EVENTS=" + totalSkipped);
 	}
 
 }
